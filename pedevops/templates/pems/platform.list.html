@@ -1,0 +1,74 @@
+{% extends "common/base.pe.html" %}
+
+{% block title %}
+    List platform
+{% endblock %}
+
+{% block rcontent %}
+    <div class="btn-toolbar">
+        <div class="btn-group">
+            {% url "pe_platformadd" as platformaddurl %}
+            <a class="btn btn-default {% if request.path = platformaddurl %} active {% endif %}" href={{ platformaddurl }}><span class="glyphicon glyphicon-edit"></span>添加新平台</a>
+            {% url "pe_platformlist" as platformlisturl %}
+            <a class="btn btn-default {%if request.path = platfromlisturl%} active {%endif%}" href={{ platfromlisturl }}><span class="glyphicon glyphicon-list"></span>平台列表</a>
+        </div>
+    </div>
+
+    <hr/>
+    <style>
+         .table th, .table td { 
+				text-align: center; 
+				height:38px;
+			}
+    </style>
+
+
+    {% for k,v in platform.items %}
+        <h3>{{ k }}</h3>
+        <div class="btn-group">
+            <table class="table table-bordered" style="table-layout:fixed; word-break:break-all; word-wrap:break-all;">
+                <tr>
+                    <th width="32%">Service</th>
+                    <th width="17%">Develop</th>
+                    <th width="17%">Stage Ready</th>
+                    <th width="17%">Deploy Online</th>
+                    <th width="17%">Deploy Backup</th>
+                </tr>
+             
+                {% for s  in  v %}
+                    <tr>
+                    <td><a class="btn btn-info" >{{ s.project }}</a></td>
+                    <td><a {% if s.status %}class="btn btn-default active" {% endif %}>{{ s.status }}</a></td>
+                    <td><a {% if s.status1 %}class="btn btn-warning" {% endif %}>{{ s.status1 }}</a></td>
+                    <td><a {% if s.status2 %}class="btn btn-success" {% endif %}>{{ s.status2 }}</a></td>
+                    <td><a {% if s.status3 %}class="btn btn-danger" {% endif %}>{{ s.status3 }}</a></td>
+                    </tr>
+                {% endfor %}
+
+
+            </table>
+        </div>
+    {% endfor %}
+
+
+<!--    <table class="table table-hover table-striped  table-bordered table-condensed">
+        <tr>
+            <th>ID</th>
+            <th>平台名称</th>
+            <th>操作</th>
+        </tr>
+
+            for i in IPage
+                <tr style="font-size: 13px;">
+                    <td>i.id </td>
+                    <td>i.name</td>
+                    <td class="host_buttom">
+                        <a class="btn btn-warning btn-xs" href="#" onclick="return confirm('是否确认编辑?')">编辑</a>
+                        <a class="btn btn-danger btn-xs" href="#" onclick="return confirm('是否删除用户: {{ i.username}} ??')">删除</a>
+                    </td>
+                </tr>
+            endfor
+
+        </table>
+-->
+{% endblock %}

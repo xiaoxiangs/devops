@@ -1,0 +1,43 @@
+{% extends "common/base.coderelease.html" %}
+
+{% block title %}
+    代码发布
+{% endblock %}
+
+{% block rcontent %}
+    <div class="btn-toolbar">
+        <div class="btn-group">
+            {% url "coderelease_put" as codereleaseputurl %}
+            <a class="btn btn-default {% if request.path = codereleaseputurl %} active {% endif %}" href={{ codereleaseputurl }}><span class="glyphicon glyphicon-edit"></span>提交更新</a>
+        </div>
+    </div>
+
+    <hr/>
+
+    <form class="form-horizontal" role="form" action={% url "coderelease_put" %} method="POST" >
+    {% csrf_token %}
+
+        {% for item in form %}
+            <div class="form-group">
+                    <label class="control-label col-md-2">{{item.label}}</label>
+                {% ifequal item.name "program" %}
+                    <div class="col-md-2">
+                {% else %}
+                    <div class="col-md-8">
+                {% endifequal %}
+                    {{item}}
+                </div>
+                <div class="col-md-offset-1 col-md-10">
+                    {{item.errors}}
+                </div>
+            </div>
+        {% endfor %}
+
+        <div class="form-group">
+            <div class="col-md-offset-10 col-md-10">
+                <button type="submit" class="btn btn-danger btn-sm">提 交</button>
+            <div>
+        </div>
+    </form>
+
+{% endblock %}

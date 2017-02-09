@@ -1,0 +1,120 @@
+{% extends "common/base.pe.html" %}
+
+{% block title %}
+    Cluster Info
+{% endblock %}
+
+{% block rcontent %}
+    <div class="btn-toolbar">
+        <div class="btn-group">
+            {% url "pe_clusterinfo" as clusterinfourl %}
+            <a class="btn btn-default {% if request.path = clusterinfourl %} active {% endif %}" href={{ clusterinfourl }}><span class="glyphicon glyphicon-edit"></span>Cluster信息查询</a>
+        </div>
+    </div>
+    <br /><br /><br />
+    <style>
+         .table th, .table td {
+                                text-align: center;
+                                height:10px;
+                        }
+    </style>
+    <p class="text-center">{{ cluster }}</p>
+    <br />
+    <div class="btn-group">
+        {% for k,v in clusterinfo.items %} 
+            <h3>{{ k }}</h3>
+            <table class="table table-condensed table-bordered" style="table-layout:fixed;word-break:break-all; word-wrap:break-all;">
+            <tr>
+                <th width="25%">主机名</th>
+                <th width="25%">状态</th>
+                <th>描述</th>
+                <th width="10%">角色</th>
+            </tr>
+            {% for i in v %}
+                <tr>
+                <td>{{ i.host }}</td>
+                {% ifequal i.status 0 %}
+                    <td bgcolor="#00BB00">noline</td>
+                 {%else %}
+                     {% ifequal i.status 5 %}
+                         <td bgcolor="#FF0000">down</td>
+                     {% else %}
+                         <td>update</td>
+                     {% endifequal %}
+                {% endifequal %}
+                {%ifequal i.mark None %}
+                    <td id = {{ i.id }} ondblclick="edittd(this)" >双击可编辑</td>
+                {% else %}
+                    <td class:'form-control' id = {{ i.id }} ondblclick="edittd(this)">{{ i.mark }}</div></td>
+                {% endifequal %}
+                <td width="1%">{{ i.cluster }}</td>
+                </tr>
+            {% endfor %}
+            <input type="hidden" value="" id="HValue" />
+            </table>
+            <br />
+        {% endfor %}
+    </div>
+<script language="javascript" type="text/javascript">
+function getCookie(name) {
+    var cookieValue = null;
+    if (document.cookie && document.cookie != '') {
+        var cookies = document.cookie.split(';');
+        for (var i = 0; i < cookies.length; i++) {
+            var cookie = jQuery.trim(cookies[i]);
+
+            if (cookie.substring(0, name.length + 1) == (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+
+var csrftoken = getCookie('csrftoken');
+function csrfSafeMethod(method) {
+    return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+}
+$.ajaxSetup({
+    beforeSend: function(xhr, settings) {
+        if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+            xhr.setRequestHeader("X-CSRFToken", csrftoken);
+        }
+    }
+});
+
+
+    function edittd(thisCells)
+    {
+        var CellText= thisCells.innerHTML;
+        if(CellText.substring(0,1)!="<")
+        {
+            thisCells.innerHTML="<input type=\"text\" class=\"form-control\" id=\"TextBox1"+thisCells.id+"\" value=\""+thisCells.innerHTML+"\" onblur=\"thisTextBoxOnblur(this)\" />";
+        document.getElementById("textBox1"+thisCells.id).focus();
+        }
+        
+    }
+
+    function thisTextBoxOnblur(thisTextBox)
+    {
+        var thisCellsID=thisTextBox.id;
+        thisCellsID=thisCellsID.substring(8,11);
+        document.getElementById("HValue").value=thisTextBox.value;
+        document.getElementById(thisCellsID).innerHTML=document.getElementById("HValue").value;
+
+        var id = thisCellsID;
+        var mark = document.getElementById("HValue").value;
+        var url = window.location.href;
+        var mydata = {
+            'ID':id,
+            'mark':mark,
+        };
+        $.post(url,mydata);
+
+
+    }
+</script>
+
+
+{% endblock %}

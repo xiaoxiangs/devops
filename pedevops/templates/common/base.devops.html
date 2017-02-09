@@ -1,0 +1,44 @@
+{% extends "common/base.nav.html" %}
+
+{% block content %}
+    <div class="container" style="width:100%">
+        <div class="row">
+
+            <!-- 侧边栏 -->
+            <div class="col-md-2"> 
+                {% if user %}
+                    <div class="panel-group" id="accordion">
+
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <h4 class="panel-title">
+                                    <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne" class="collapsed"><span class="glyphicon glyphicon-list-alt btn-xs"></span>自动化工具</a>
+                                </h4>
+                            </div>
+                                <div class="panel-body">
+                                    <table class="table">
+                                        <tbody>
+                                            <tr><td><span class="glyphicon glyphicon-tree-conifer btn-xs"></span><a href="#">LVS操作</a></td></tr>
+                                            <tr><td><span class="glyphicon glyphicon-tree-conifer btn-xs"></span><a href={% url "proxy_update" %}>代理层操作</a></td></tr>
+                                            <tr><td><span class="glyphicon glyphicon-tree-conifer btn-xs"></span><a href="#">服务器切流量</a></td></tr>
+                                            <tr><td><span class="glyphicon glyphicon-tree-conifer btn-xs"></span><a href={% url "dns_update" %}>内网DNS操作</a></td></tr>
+                                            <tr><td><span class="glyphicon glyphicon-tree-conifer btn-xs"></span><a href={% url "dns_check" %}>域名解析查询</a></td></tr>
+                                            <tr><td><span class="glyphicon glyphicon-tree-conifer btn-xs"></span><a href={% url "onlinestats" %}>上线统计</a></td></tr>
+                                            <tr><td><span class="glyphicon glyphicon-tree-conifer btn-xs"></span><a href={% url "deletelog" %}>服务器LOG删除</a></td></tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                        </div>
+
+                    </div>
+                {% endif %}
+            </div>
+
+            <!-- 内容区域 -->
+            <div class="col-md-10">
+                {% block rcontent %}{% endblock %}
+            </div>
+
+        </div>
+    </div>
+{% endblock %}

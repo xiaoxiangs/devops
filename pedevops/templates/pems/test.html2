@@ -1,0 +1,10 @@
+<a>{{ cluster }} </a>
+<br />
+{% for k,v in clusterinfo.items %}
+    <a>{{ k }}</a>
+    <br />
+    {% for i in v %}
+        <a>{{ i.host }}</a>
+    {% endfor %}
+    <br />
+{% endfor%}

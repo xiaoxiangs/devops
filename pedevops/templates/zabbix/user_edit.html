@@ -1,0 +1,96 @@
+{% extends "common/base.zabbix.html" %}
+
+{% block title %}
+    monitor_useredit
+{% endblock %}
+
+{% block head %}
+    <script src="/static/js/jquery.bootstrap-duallistbox.js"></script>
+    <link rel="stylesheet" type="text/css" href="/static/css/bootstrap-duallistbox.css">
+{% endblock %}
+
+
+{% block rcontent %}
+    <div class="btn-toolbar">
+        <div class="btn-group">
+            {% url "monitor_useradd" as monitoruserrul %}
+            <a class="btn btn-default" href={{ monitoruserrul }}><span class="glyphicon glyphicon-edit"></span>新建用户</a>
+            <a class="btn btn-default" href='/zabbix/userlist/0/'><span class="glyphicon glyphicon-list"></span>用户列表</a>
+        </div>
+    </div>
+    <hr/>
+
+    <form class="form-horizontal" role="form" action="{% url "monitoruser_edit" userID %}?next={{ req_path }}" method="POST" >
+    {% csrf_token %}
+
+            <div class="form-group">
+                <label class="control-label col-md-1">用 户 </label>
+                <div class="col-md-9">
+                    <input class="form-control" id="monitoruser" maxlength="64" name="monitoruser" type="text" value="{{ edituser.alias }}" />
+                </div>
+                <div class="col-md-offset-1 col-md-10">
+                    
+                </div>
+            </div>
+        <br />
+        <div class="form-group">
+                <label class="control-label col-md-1">用户组</label>
+                <div class="col-md-9">
+                    <select multiple="multiple" class="form-control" id="id_usergroup" multiple="multiple" name="usergroup" size="10">
+                    {% for g in totaluser %}
+                        <option value="{{ g.usrgrpid }}">{{ g.name }}</option>
+                    {% endfor %}
+                    {% for n in edituser.usrgrps %}
+                        <option value="{{ n.usrgrpid }}" selected="selected">{{ n.name }}</option>
+                    {% endfor %}
+                    </select>
+
+                </div>
+                <div class="col-md-offset-1 col-md-10">
+                    
+                </div>
+            </div>
+      <br />
+      <div class="form-group">
+          <label class="control-label col-md-1">邮箱</label>
+          <div class="col-md-4">
+              <input name="sendEmail" type="email" class="form-control" id="usermail" value="{{ edituser.medias.sendEmail.sendto }}">
+          </div>
+          <label class="control-label col-md-1">移动电话</label>
+          <div class="col-md-4">
+              <input name="sendSms" type="text" class="form-control" id="usermobile" value="{{ edituser.medias.sendSms.sendto }}">
+          </div>
+     </div>`
+
+
+
+<!--          <label class="control-label col-md-1">联系方式</label>
+          <div class="col-md-9">
+              <div class="input-group">
+                 <span class="input-group-addon">邮箱</span>
+                 <input type="text" class="form-control" placeholder="twitterhandle">
+                 <span class="input-group-addon">移动电话</span>
+                 <input type="text" class="form-control" placeholder="twitterhandle">
+              </div>
+          </div>
+--!>
+
+
+        <div class="form-group">
+            <div class="col-md-offset-4 col-md-9">
+                <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('确认更新吗？')">更 新</button>
+            <div>
+        </div>
+    </form>
+
+    <script>
+        var demo1 = $('select[name="usergroup"]').bootstrapDualListbox({
+              nonSelectedListLabel: '可选分组',
+              selectedListLabel: '已选分组',
+              showFilterInputs: false,
+              preserveSelectionOnMove: 'moved',
+              moveOnSelect: false,
+        });
+    </script>
+
+{% endblock %}

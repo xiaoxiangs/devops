@@ -1,0 +1,53 @@
+{% extends "common/base.side.html" %}
+
+{% block title %}
+    List User
+{% endblock %}
+
+{% block rcontent %}
+    <div class="btn-toolbar">
+        <div class="btn-group">
+            {% url "adduser" as theadduserurl %}
+            <a class="btn btn-default {% if request.path = theadduserrul %} active {% endif %}" href={{ theadduserurl }}><span class="glyphicon glyphicon-edit"></span>添加新用户</a>
+            {% url "listuser" as thelistuserurl %}
+            <a class="btn btn-default {%if request.path = thelistuserurl%} active {%endif%}" href={{ thelistuserurl }}><span class="glyphicon glyphicon-list"></span>用户列表</a>
+        </div>
+    </div>
+
+    <hr/>
+
+    <table class="table table-hover table-striped  table-bordered table-condensed">
+        <tr>
+            <th>账号</th>
+            <th>姓名</th>
+            <th>Email</th>
+            <th>状态</th>
+            <th>角色</th>
+            <th>最后登录时间</th>
+            <th>操作</th>
+        </tr>
+
+            {% for i in IPage %}
+                <tr style="font-size: 13px;">
+                    <td>{{ i.username }}</td>
+                    <td>{{ i.nickname|default:"----" }}</td>
+                    <td>{{ i.email }}</td>
+                    <td>
+                        {% if i.is_active %}
+                            <span class="label label-success">启用</span>
+                        {% else %}
+                            <span class="label label-default">禁用</span>
+                        {% endif %}
+                    </td>
+                    <td>{{ i.role|default:"----" }}</td>
+                    <td>{{ i.last_login|date:"Y-m-d H:i:s" }}</td>
+                    <td class="host_buttom">
+                        <a class="btn btn-warning btn-xs" href={% url "edituser" i.id %} onclick="return confirm('是否确认编辑?')">编辑</a>
+                        <a class="btn btn-danger btn-xs" href={% url "deleteuser" i.id %} onclick="return confirm('是否删除用户: {{ i.username}} ??')">删除</a>
+                    </td>
+                </tr>
+            {% endfor %}
+
+        </table>
+    {% include "common/paginator.html" %}
+{% endblock %}

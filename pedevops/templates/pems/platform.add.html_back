@@ -1,0 +1,90 @@
+{% extends "common/base.side.html" %}
+
+{% block title %}
+    List platform
+{% endblock %}
+
+{% block rcontent %}
+    <div class="btn-toolbar">
+        <div class="btn-group">
+            {% url "pe_platformadd" as platformaddurl %}
+            <a class="btn btn-default {% if request.path = platformaddurl %} active {% endif %}" href={{ platformaddurl }}><span class="glyphicon glyphicon-edit"></span>添加新平台</a>
+            {% url "pe_platformlist" as platformlisturl %}
+            <a class="btn btn-default {% if request.path = platfromlisturl %} active {% endif %}" href={{ platformlisturl }}><span class="glyphicon glyphicon-list"></span>平台列表</a>
+        </div>
+    </div>
+
+    <hr/>
+
+    <form class="form-horizontal" role="form" action={% url "pe_platformadd" %} method="POST">
+        {% csrf_token %}
+        <label class="control-label col-md-0">添加类型</label>
+
+        <select id="select" onchange = "showandhide(this.value)" class="btn btn-default dropdown-toggle">
+
+	    <option value="1">添加平台</option>
+	    <option value="2">添加项目</option>
+            <option value="3">添加主机</option>
+        </select>
+        <br /><br /><br />
+        <div id="select_1">
+            {% for item in form %}
+                <div class="form-group">
+                    <label class="control-label col-md-3">{{item.label}}</label>
+                    <div class="col-md-2">
+                        {{item}}
+                    </div>
+                    <div class="col-md-offset-1 col-md-10">
+                        {{item.errors}}
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+
+        <div id="select_2" style="display:none;">
+            {% for item2 in forms %}
+                <div class="form-group">
+                    <label class="control-label col-md-3">{{item2.label}}</label>
+                    <div class="col-md-2">
+                        {{item2}}
+                    </div>
+                    <div class="col-md-offset-1 col-md-10">
+                        {{item2.errors}}
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+
+        <div id="select_3" style="display:none;">
+            {% for item3 in formss %}
+                <div class="form-group">
+                    <label class="control-label col-md-3">{{item3.label}}</label>
+                    <div class="col-md-2">
+                        {{item3}}
+                    </div>
+                    <div class="col-md-offset-1 col-md-10">
+                        {{item3.errors}}
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+        <br />
+        <div class="form-group">
+            <div class="col-md-offset-3 col-md-10">
+                <button type="submit" class="btn btn-danger btn-sm">新 增</button>
+            <div>
+        </div>
+    </form>
+<script language="javascript">
+function showandhide(v){
+//  alert(v);
+  for(i=1;i<4;i++){
+   var operstion = 'select_' + i;
+   document.getElementById(operstion).style.display = 'none';
+   if(i==v){
+    document.getElementById(operstion).style.display = 'block';
+   }
+  }
+}
+</script>
+{% endblock %}

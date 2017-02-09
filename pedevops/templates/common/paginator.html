@@ -1,0 +1,19 @@
+<!-- 分页功能 -->
+    第 {{ IPage.number }} 页,共 {{ IPage.paginator.num_pages }} 页.
+    <ul class="pager pull-right" style="margin: -5px 0;">
+        <li><a href="?page=1">首页</a></li>
+    
+        {% if IPage.has_previous %}
+            <li><a href="?page={{ IPage.previous_page_number }}">上一页</a></li>
+        {% else %}
+            <li class="disabled"><a onclick="javascript:return false;">上一页</a></li>
+        {% endif %}
+    
+        {% if IPage.has_next %}
+            <li><a href="?page={{ IPage.next_page_number }}">下一页</a></li>
+        {% else %}
+            <li class="disabled"><a onclick="javascript:return false;">下一页</a></li>
+        {% endif %}
+    
+        <li><a href="?page={{ IPage.paginator.num_pages }}">尾页</a></li>
+    </ul>

@@ -1,0 +1,135 @@
+{% extends "common/base.side.html" %}
+
+{% block title %}
+     dns_update
+{% endblock %}
+
+{% block rcontent %}
+    <div class="btn-toolbar">
+        <div class="btn-group">
+            {% url "dns_update" as dns_updateurl %}
+            <a class="btn btn-default {% if request.path = dns_updateurl %} active {%endif%}" href={{ dns_updateurl }}><span class="glyphicon glyphicon-edit"></span>DNS操作</a>
+        </div>
+    </div>
+
+    <hr/>
+             <div class="alert alert-info">
+                    注:
+                    公司内网DNS操作。有疑问请发邮件至pe.renren@renren-inc.com.
+               <p href="#" data-dismiss="alert" class="close">X</p>
+         </div>
+    <br />
+    <div>
+        <table class=bglbk1 cellSpacing=1 cellPadding=0 border=0>
+            <th width=100>ID</th>
+            <th width=150>操作类型</th>
+            <th width=200>DNS名称</th>
+            <th width=200>操作域</th>
+            <th width=150>记录类型</th>
+            <th width=150>IP或CNAME地址</th>
+            <form class="form-horizontal" id="myform" role="form" action={% url "dns_update" %} method="POST" >
+                {% csrf_token %}
+                {% for s in ranges %}
+                    <tr height=40 align='center'>
+                    <td align="left">{{ s }}</td>
+                    {% for i in form %}
+                        <td align="left">{{ i }}</td>
+                    {% endfor %}
+                {% endfor %}
+                </table>
+                <br />
+                <br />
+                <div class="form-group">
+                    <div class="col-md-offset-5 col-md-10">
+                        <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('确认是否提交?')">确认提交</button> 
+                    </div>
+                </div>
+            </form>
+    </div>
+    <div class="btn-toolbar">
+        <br>
+        <div class="col-md-offset-0 col-md-10">
+            <h4>历史记录:</h4>
+        </div>
+        <table class="table table-hover table-striped  table-bordered table-condensed" style="table-layout:fixed; word-break:break-all; word-wrap:break-all;">
+            <tr>
+            <th width="5%">ID</th>
+            <th width="10%">提交人</th>
+            <th width="7%">操作类型</th>
+            <th width="15%">DNS名称</th>
+            <th width="10%">记录类型</th>
+            <th width="15%">解析地址</th>
+            <th width="15%">操作时间</th>
+            <th width="10%">信息反馈</th>
+            <th width="11%">状态操作</th>
+            </tr>
+                {% for i in dnslist %}
+                    <tr style="font-size: 13px;">
+                        <td>{{ i.id }}</td>
+                        <td>{{ i.user }}</td>
+                        <td>
+                           {% ifequal i.operation_id "Delete" %}
+                               <span class="label label-default" style="font-size:13px">删除</span>
+                           {% else %}
+                               {% ifequal i.operation_id "Modify" %}
+                                   <span class="label label-warning" style="font-size:13px">修改</span>
+                               {% else %}
+                                   <span class="label label-info" style="font-size:13px">添加</span>
+                               {% endifequal %}
+                           {% endifequal %}
+                        </td>
+                        <td>{{ i.dns_name }}.{{ i.domain }}</td>
+                        <td>{{ i.record_type }}</td>
+                        <td>{{ i.analy_ip }}</td>
+                        <td>{{ i.operation_date }}</td>
+                        <td>{{ i.server_reqinfo }}</td>
+                        <td>
+                             {% ifequal i.status 1 %}
+                                 {% ifequal group_id 1 %}
+                                     <a class="btn btn-success btn-xs" href={% url "dns_apply" i.id %} onclick="return confirm('确认通过审批?')">审批</a>
+                                     <a class="btn btn-warning btn-xs" href={% url "dns_cancel" i.id %} onclick="return confirm('确认拒绝DNS申请?')">拒绝</a>
+                                 {% else %}
+                                     <span class="label label-info" style="font-size:10px">管理员审批中</span>
+                                     <a class="btn btn-warning btn-xs" style="font-size:13px" href={% url "dns_cancel" i.id %} onclick="return confirm('确认取消DNS操作申请?')">取消</a>
+                                 {% endifequal %}
+                             {% else %}
+                                 {% ifequal i.status 2 %}
+                                     <span class="label btn-primary" style="font-size:12px">后台处理中</span>
+                                 {% else %}
+                                    {% ifequal i.status 3 %}
+                                        <span class="label label-default" style="font-size:12px">已完成</span>
+                                    {% else %}
+                                        {% ifequal i.status 4 %}
+                                            <span class="label label-default" style="font-size:12px">已取消</span>
+                                        {% else %}
+                                            {% ifequal i.status 5 %}
+                                                <span class="label label-default" style="font-size:12px">管理员拒绝</span>
+                                            {% else %}
+                                                <span class="label label-danger" style="font-size:12px">后台处理错误</span>
+                                            {% endifequal %}
+                                        {% endifequal %}
+                                    {% endifequal %}
+                                 {% endifequal %}
+                             {% endifequal %}
+
+                        </td>
+                    </tr>
+                {% endfor %} 
+        </table>
+
+
+    </div>
+<script LANGUAGE="javascript">
+//function subm(){
+//    if(confirm('确认提交吗?'))
+//        var url = 'http://10.5.11.17:8000/devops/dns_update/';
+//        var data = $("form").serialize();
+//        $.post(url,data,function(req){
+//            if(req.req_dicts != 0){
+//                alert(req);
+//            }
+//    });
+//}
+</script>
+
+{% endblock %}

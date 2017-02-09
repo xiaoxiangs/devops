@@ -1,0 +1,78 @@
+<!DOCTYPE HTML>
+<html>
+    <head>
+        <meta http-equiv="content-type" content="text/html; charset=utf-8">
+        
+        <title>{% block title %}{% endblock %}</title>
+        
+        <!-- Bootstrap -->
+        <link href="/static/css/bootstrap.css" rel="stylesheet">
+        <script src="/static/js/jquery-1.11.0.min.js"></script>
+        <script src="/static/js/bootstrap.min.js"></script>
+        
+        <!-- custom -->        
+        <link href="/static/css/custom.css" rel="stylesheet">
+
+        {% block head %}{% endblock %}
+    </head>
+    
+    <body>
+        <!-- 导航栏 -->
+        <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target=".navbar-collapse">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="/">人人运维管理系统</a>
+            </div>
+
+            <div class="collapse navbar-collapse">
+                {% if user %}
+                    <ul class="nav navbar-nav">
+                            <li {% if 'devops' in request.path %} class="active" {% endif %}><a href="/devops">Devops</a></li>
+                            <li {% if 'pe' in request.path %} class="active" {% endif %}><a href="/pe/platform/list/">PE上线</a></li>
+                            <li {% if 'Permissions' in request.path %} class="active" {% endif %}><a href="/permisson">权限申请</a></li>
+                         {% ifequal user_roleid 1 %}
+                            <li {% if 'zabbix' in request.path %} class="active" {% endif %}><a href="/zabbix/hostlist/0/">系统监控</a></li>
+                            <li {% if 'coderelease' in request.path %} class="active" {% endif %}><a href="/coderelease/list/">代码发布</a></li>
+                            <li {% if 'login' in request.path %} class="active" {% endif %}><a href="/login/admin">Admin</a></li>
+                         {% endifequal %}
+                    </ul>
+
+                    <ul class="nav navbar-nav navbar-right" style="padding-right: 1%">
+                        <li class="dropdown">
+                            <a href="" class="dropdown-toggle" data-toggle="dropdown"><span class="glyphicon glyphicon-user"></span> {{ user }} <b class="caret"></b></a>
+                            <ul class="dropdown-menu">
+                                <li class="divider"></li>
+                                <li><a href={% url "logout" %}>注销登陆</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                {% else %}
+                    <ul class="nav navbar-nav">
+                        <li {% if 'login' in request.path %} class="active" {% endif %}><a href={% url "login" %}>登陆</a></li>
+                        <li {% if 'about' in request.path %} class="active" {% endif %}><a href="/aboutss">关于</a></li>
+                    </ul>
+
+                    <ul class="nav navbar-nav navbar-right" style="padding-right: 1%">
+                        <li {% if 'help' in request.path %} class="active" {% endif %}><a href="#">帮助</a></li>
+                    </ul>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- 内容区域 -->
+        {% block content %}{% endblock %}
+
+
+        <!-- 页脚 -->
+        <div class="col-md-12">
+            <hr />
+            <p class="text-muted">&copy; System 2016</p>
+        </div>
+
+    </body>
+</html>

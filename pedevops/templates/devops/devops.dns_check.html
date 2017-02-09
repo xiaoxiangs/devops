@@ -1,0 +1,71 @@
+{% extends "common/base.devops.html" %}
+
+{% block title %}
+     dns_check
+{% endblock %}
+
+{% block rcontent %}
+    <div class="btn-toolbar">
+        <div class="btn-group">
+            {% url "dns_check" as dns_checkurl %}
+            <a class="btn btn-default {% if request.path = dns_checkurl %} active {%endif%}" href={{ dns_checkurl }}><span class="glyphicon glyphicon-edit"></span>内网DNS反向查询</a>
+        </div>
+    </div>
+
+    <hr/>
+             <div class="alert alert-info">
+                    注:
+                    公司内网DNS查询(d.xiaonei.com)。有疑问请发邮件至pe.renren@renren-inc.com.
+               <p href="#" data-dismiss="alert" class="close">X</p>
+         </div>
+    <br />
+    <div>
+            <form class="form-horizontal" id="myform" role="form" action={% url "dns_check" %} method="POST" >
+                {% csrf_token %}
+                 <br />
+                 <div class="form-group">
+                     <label class="control-label col-md-1">IP地址</label>
+                     <div class="col-md-9">                     
+                         <input class="form-control" type="text" name="ip" value="" placeholder="请输入ip地址,多个请用','号隔开" />
+                     </div>
+                 </div>
+                 <br />
+                 <div class="form-group">
+                    <div class="col-md-offset-4 col-md-10">
+                        <button type="submit" class="btn btn-danger btn-sm">查询</button>
+                    </div>
+                </div>
+            </form>
+    </div>
+    <div class="btn-toolbar">
+       {% if ip %}
+           <div class="page-header">
+               <h3>查询结果:</h3>
+           </div>
+                <table class="table table-hover table-striped  table-bordered table-condensed" style="table-layout:fixed; word-break:break-all; word-wrap:break-all;">
+                <tr>
+                    <th width="30%">IP Address</th>
+                    <th>Domain Name</th>
+                </tr>
+                {% for k,v in ip.items %}
+                    <tr>
+                         <td> {{ k }} </td>
+                         <td>
+                             {% for i in v %}
+                                 {{i}}<br/>
+                             {% endfor %}
+                         </td>
+                    </tr>
+
+                {% endfor %}
+                </table>
+           <div>
+               <font color="#FF0000">注: DNS最后一次同步时间为:{{ st_time }}</font>
+           </div>
+       {% endif %}
+       
+    </div>
+    
+</div>
+
+{% endblock %}

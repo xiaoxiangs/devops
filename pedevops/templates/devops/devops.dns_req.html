@@ -1,0 +1,16 @@
+<html>
+    <head>
+          <title>人人运维</title>
+    </head>
+
+{% block rcontent %}
+    <body>
+          <br/>
+          <br/>
+          <br/>
+          <p align="center">{{ updatereq }}</p>
+          <p align="center">3秒后返回</p>
+          <meta http-equiv="refresh" content="3;url={% url "dns_update" %}">
+    </body>
+{% endblock%}
+</html>

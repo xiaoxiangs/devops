@@ -1,0 +1,114 @@
+{% extends "common/base.devops.html" %}
+
+{% block title %}
+    Proxy_Opertion list
+{% endblock %}
+
+{% block rcontent %}
+    <div class="btn-toolbar">
+        <div class="btn-group">
+            {% url "proxy_update" as proxy_updateurl %}
+            <a class="btn btn-default {% if request.path = proxy_updateurl %} active {% endif %}" href={{ proxy_updateurl }}><span class="glyphicon glyphicon-edit"></span>代理层操作申请</a>
+            {% url "proxy_updatelist" as proxy_updatelisturl %}
+            <a class="btn btn-default {%if request.path = proxy_updatelisturl%} active {%endif%}" href={{ proxy_updatelisturl }}><span class="glyphicon glyphicon-list"></span>代理层申请列表</a>
+        </div>
+    </div>
+
+    <hr/>
+
+    <table class="table table-hover table-striped  table-bordered table-condensed">
+        <tr>
+            <th>ID</th>
+            <th width="10%">申请用户</th>
+            <th width="15%">域名</th>
+            <th>后端ip</th>
+            <th width="13%">申请时间</th>
+            <th>描述</th>
+            <th>反馈信息</th>
+            <th width="11%">状态操作</th>
+        </tr>
+
+            {% for i in IPage %}
+                <tr style="font-size: 13px;">
+                    <td>{{ i.id }}</td>
+                    <td>{{ i.user }}</td>
+                    <td>{{ i.domain}}</td>
+                    <td>{{ i.mapping_ip}}</td>
+                    <td>{{ i.operation_date}}</td>
+                    <td>{{ i.mark }}</td>
+                    <td>{{ i.reqinfo }}</td>
+                    <td>
+                        {% ifequal i.status 1 %}
+                            {% ifequal user_roleid 1 %}
+                                <a class="btn btn-success btn-xs" href={% url "proxy_apply" i.id %} onclick="return confirm('确认通过审批?')">审批</a>
+                                <a class="btn btn-warning btn-xs"  id="Del" onclick="modify()" data-toggle="modal" data-delid={% url "proxy_cancel" i.id %}>拒绝</a>
+                            {% else %}
+                                <span class="label label-info" style="font-size:10px">审批中</span>
+                                <a class="btn btn-warning btn-xs" style="font-size:13px" href={% url "proxy_cancel" i.id %} onclick="return confirm('确认取消代理层操作申请?')">取消</a>
+                            {% endifequal %}
+                        {% else %}
+                            {% ifequal i.status 2 %}
+                                {% ifequal user_roleid 1 %}
+                                    <a class="btn btn-success btn-xs" href={% url "proxy_okapply" i.id %} onclick="return confirm('确认后端操作完成?')">完成</a>
+                                {% endifequal %}
+                                <span class="label btn-primary" style="font-size:10px">后台处理中</span>
+                            {% else %}
+                                {% ifequal i.status 3 %}
+                                    <span class="label label-default" style="font-size:12px">已完成</span>
+                                {% else %}
+                                    {% ifequal i.status 4 %}
+                                        <span class="label label-default" style="font-size:12px">已取消</span>
+                                    {% else %}
+                                        <span class="label label-default" style="font-size:12px">管理员拒绝</span>
+                                    {% endifequal %}
+                                {% endifequal %}
+                            {% endifequal %}
+                        {% endifequal %}
+
+                    </td>
+                </tr>
+            {% endfor %}
+
+        </table>
+<!--模态框(Model) -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header"><button class="close" type="button" data-dismiss="modal" aria-hidden="true">×</button>
+                <h3 id="myModalLabel">拒绝原因</h3>
+            </div>
+
+            <div class="modal-body">
+              <form class="form-horizontal" id="tst" action="xx" method="POST">
+                  {% csrf_token %}
+                  <textarea name="reqinfo" cols=50 rows=2 placeholder="请在此输入拒绝原因"></textarea>
+                  <div class="form-group">
+                        <br/>
+                      <div class="col-md-offset-8 col-md-5">
+                        <a class="btn btn-default" data-dismiss="modal">取消</a>
+                        <button type="submit" class="btn btn-primary" >确认拒绝</button>
+                      </div>
+                  </div>
+              </form>
+            </div>
+<!-- 
+                <a class="btn btn-default" data-dismiss="modal">取消</a>
+                <a href="xx" id="tst" class="btn btn-primary">确认拒绝</a>
+-->
+
+        </div>
+    </div>
+</div>
+
+{% include "common/paginator.html" %}
+
+<script LANGUAGE="javascript">
+$(function () { $("[data-toggle='tooltip']").tooltip(); });
+function modify() {
+    var delurl = $("#Del").attr('data-delid');
+    $("#tst").attr('action',delurl);
+    $("#myModal").modal();
+}
+</script>
+
+{% endblock %}

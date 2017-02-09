@@ -1,0 +1,89 @@
+{% extends "common/base.side.html" %}
+
+{% block title %}
+     Proxy_update
+{% endblock %}
+
+{% block rcontent %}
+    <div class="btn-toolbar">
+        <div class="btn-group">
+            {% url "proxy_update" as proxy_updateurl %}
+            <a class="btn btn-default {% if request.path = proxy_updateurl %} active {%endif%}" href={{ proxy_updateurl }}><span class="glyphicon glyphicon-edit"></span>代理层操作申请</a>
+        </div>
+    </div>
+
+    <hr/>
+             <div class="alert alert-info">
+                    注:
+                    公司代理层操作申请。有疑问请发邮件至pe.renren@renren-inc.com.
+               <p href="#" data-dismiss="alert" class="close">X</p>
+         </div>
+
+     <div>
+            <div class="btn-group">
+            <a class="btn btn-primary btn-3g">代理层后端查询   <span class="glyphicon glyphicon-list"></span></a>
+            </div>
+            <br/>
+            <form class="form-horizontal" id="myform" role="form" action={% url "proxy_update" %} method="POST" >
+                {% csrf_token %}
+                 <br />
+                 <div class="col-lg-16" style="padding: 1px 100px 1px;">
+                 <div class="btn-group">
+
+                  <pre>域名: <input id="strdate" style="width:320px;" type="text" name="domain_check" value=""  placeholder="请输入需要查询的域名,多个请用','号隔开" > <input type="submit" class="btn btn-danger btn-sm" value="查询"></pre
+>
+                </div>
+                </div>
+            </form>
+   </div>
+   <div class="btn-toolbar" style="padding: 1px 100px 1px;">
+        {% if domain_check %}
+                <table class="table table-hover table-striped  table-bordered table-condensed" style="table-layout:fixed; word-break
+:break-all; word-wrap:break-all;">
+                <tr>
+                    <th width="30%">Domain Name</th>
+                    <th>IP Address</th>
+                </tr>
+                {% for k,v in domain_check.items %}
+                    <tr>
+                        <td> {{ k }} </td>
+                        <td>
+                            {% for i in v %}
+                                 {{ i }} <br />
+                            {% endfor %}
+                        </td>
+                    </tr>
+                {% endfor%}
+
+                </table>
+        {% endif %}
+   </div>
+   <br />
+   <div class="btn-group">
+         <a class="btn btn-primary btn-3g">代理层操作申请   <span class="glyphicon glyphicon-list"></span></a>
+   </div>
+   <br />
+   <br />
+       <form class="form-horizontal" role="form" action={% url "proxy_update" %} method="POST" >
+    {% csrf_token %}
+
+        {% for item in form %}
+            <div class="form-group">
+                <label class="control-label col-md-2">{{item.label}}</label>
+                <div class="col-md-7">
+                    {{item}}
+                </div>
+                <div class="col-md-offset-1 col-md-10">
+                    {{item.errors}}
+                </div>
+            </div>
+        {% endfor %}
+        <div class="form-group">
+            <br />
+            <div class="col-md-offset-4 col-md-10">
+               <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('确认进行代理层操作?')">确认提交</button>
+            <div>
+        </div>
+    </form>
+</div>
+{% endblock %}

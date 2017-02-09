@@ -1,0 +1,39 @@
+{% extends "common/base.side.html" %}
+
+{% block title %}
+    List Group
+{% endblock %}
+
+{% block rcontent %}
+    <div class="btn-toolbar">
+        <div class="btn-group">
+            {% url "groupadd" as thegroupaddurl %}
+            <a class="btn btn-default {% if request.path = thegroupaddurl %} active {% endif %}" href={{ thegroupaddurl }}><span class="glyphicon glyphicon-edit"></span>新建分组</a>
+            {% url "grouplist" as thegrouplisturl %}
+            <a class="btn btn-default {%if request.path = thegrouplisturl%} active {%endif%}" href={{ thegrouplisturl }}><span class="glyphicon glyphicon-list"></span>分组列表</a>
+        </div>
+    </div>
+
+    <hr/>
+
+    <table class="table table-hover table-striped  table-bordered table-condensed">
+        <tr>
+            <th>ID</th>
+            <th>分组名称</th>
+            <th>操作</th>
+        </tr>
+
+            {% for i in IPage %}
+                <tr style="font-size: 13px;">
+                    <td>{{ i.id }}</td>
+                    <td>{{ i.name }}</td>
+                    <td class="host_buttom">
+                        <a class="btn btn-warning btn-xs" href={% url "groupedit" i.id %} onclick="return confirm('是否确认编辑?')">编辑</a>
+                        <a class="btn btn-danger btn-xs" href={% url "groupdelete" i.id %} onclick="return confirm('是否删除分组: {{ i.name}} ??')">删除</a>
+                    </td>
+                </tr>
+            {% endfor %}
+
+        </table>
+    {% include "common/paginator.html" %}
+{% endblock %}

@@ -1,0 +1,62 @@
+{% extends "common/base.nav.html" %}
+
+{% block content %}
+    <div class="container" style="width:100%">
+        <div class="row">
+
+            <!-- 侧边栏 -->
+            <div class="col-md-2"> 
+                {% ifequal user_roleid 1 %}
+                    <div class="panel-group" id="accordion">
+
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <h4 class="panel-title">
+                                    <a data-toggle="collapse" data-parent="#accordion" href="#collapseThree" class="collapsed"><span class="glyphicon glyphicon-list-alt btn-xs"></span>监控系统</a>
+                                </h4>
+                            </div>
+                            <div id="collapseThree" class="panel-collapse collapse {% if "hostlist" in request.path %} in {% endif %}">
+                                <div class="panel-body">
+                                    <table class="table">
+                                        <tbody>
+                                            <tr><td><span class="glyphicon glyphicon-tree-conifer btn-xs"></span><a href={% url "monitor_list" "0" %}>监控列表</a></td></tr>
+                                            <tr><td><span class="glyphicon glyphicon-tree-conifer btn-xs"></span><a href="#">监控添加</a></td></tr>
+                                            <tr><td><span class="glyphicon glyphicon-tree-conifer btn-xs"></span><a href="#">监控部署</a></td></tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <h4 class="panel-title">
+                                    <a data-toggle="collapse" data-parent="#accordion" href="#collapseFour" class="collapsed"><span class="glyphicon glyphicon-list-alt btn-xs"></span>账户/权限管理</a>
+                                </h4>
+                            </div>
+                            <div id="collapseFour" class="panel-collapse collapse {% if "userlist" in request.path %} in {% endif %}">
+                                <div class="panel-body">
+                                    <table class="table">
+                                        <tbody>
+                                            <tr><td><span class="glyphicon glyphicon-tree-conifer btn-xs"></span><a href={% url "user_list" "0" %}>用户管理</a></td></tr>
+                                            <tr><td><span class="glyphicon glyphicon-tree-conifer btn-xs"></span><a href="#">分组管理</a></td></tr>
+                                            <tr><td><span class="glyphicon glyphicon-tree-conifer btn-xs"></span><a href="#">
+权限管理</a></td></tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                  </div>
+
+                {% endifequal %}
+            </div>
+
+            <!-- 内容区域 -->
+            <div class="col-md-10">
+                {% block rcontent %}{% endblock %}
+            </div>
+
+        </div>
+    </div>
+{% endblock %}

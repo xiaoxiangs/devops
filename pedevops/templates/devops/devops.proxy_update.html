@@ -1,0 +1,156 @@
+{% extends "common/base.devops.html" %}
+
+{% block title %}
+     Proxy_update
+{% endblock %}
+
+{% block rcontent %}
+    <div class="btn-toolbar">
+        <div class="btn-group">
+            {% url "proxy_update" as proxy_updateurl %}
+            <a class="btn btn-default {% if request.path = proxy_updateurl %} active {%endif%}" href={{ proxy_updateurl }}><span class="glyphicon glyphicon-edit"></span>代理层操作申请</a>
+            {% url "proxy_updatelist" as proxy_updatelisturl %}
+            <a class="btn btn-default {%if request.path = proxy_updatelisturl%} active {%endif%}" href={{ proxy_updatelisturl }}><span class="glyphicon glyphicon-list"></span>代理层申请列表</a>
+        </div>
+    </div>
+
+    <hr/>
+             <div class="alert alert-info">
+                    注:<br />
+                    &nbsp&nbsp&nbsp&nbsp&nbsp<font color="#FF0000">提交操作申请前请查询是否有关联域名。如有，请确认是否同时修改.如确认请在"域名"选项中写入所有关联域名,否则请在操作说明选项中注明。</font>
+                    <br />&nbsp&nbsp&nbsp&nbsp&nbsp如无关联域名或新加入代理层的域名请忽略。有疑问请发邮件至pe.renren@renren-inc.com.谢谢!
+               <p href="#" data-dismiss="alert" class="close">X</p>
+         </div>
+
+     <div>
+            <div class="btn-group">
+            <a class="btn btn-primary btn-3g">代理层后端查询   <span class="glyphicon glyphicon-list"></span></a>
+            </div>
+            <br/>
+            <form class="form-horizontal" id="myform" role="form" action={% url "proxy_update" %} method="POST" >
+                {% csrf_token %}
+                 <br />
+                 <div class="col-lg-16" style="padding: 1px 100px 1px;">
+                 <div class="btn-group">
+
+                  <pre>域名: <input id="strdate" style="width:320px;" type="text" name="domain_check" value=""  placeholder="请输入需要查询的域名,多个请用','号隔开" > <input type="submit" class="btn btn-danger btn-sm" value="查询"></pre
+>
+                </div>
+                </div>
+            </form>
+   </div>
+   <div class="btn-toolbar" style="padding: 1px 100px 1px;">
+        {% if domain_check %}
+                <table class="table table-hover table-striped  table-bordered table-condensed" style="table-layout:fixed; word-break
+:break-all; word-wrap:break-all;">
+                <tr>
+                    <th width="30%">Domain Name</th>
+                    <th>IP Address</th>
+                    <th>关联域名</th>
+                </tr>
+                {% for k,v in domain_check.items %}
+                    <tr>
+                        <td> {{ k }} </td>
+                        <td>
+                            {% for i in v.ip %}
+                                {{ i }} <br />
+                            {% endfor %}
+                        </td>
+                        <td>
+                            {% for r in v.relation %}
+                                {{ r }} <br />
+                            {% endfor %}
+                        </td>
+                    </tr>
+                {% endfor%}
+
+                </table>
+        {% endif %}
+   </div>
+   <br />
+   <div class="btn-group">
+         <a class="btn btn-primary btn-3g">代理层操作申请   <span class="glyphicon glyphicon-list"></span></a>
+   </div>
+   <br />
+   <br />
+       <form id="myform" onsubmit="return false" class="form-horizontal" role="form" action={% url "proxy_update" %} method="POST" >
+    {% csrf_token %}
+
+        {% for item in form %}
+            <div class="form-group">
+                <label class="control-label col-md-2">{{item.label}}</label>
+                <div class="col-md-7">
+                    {{item}}
+                </div>
+                <div class="col-md-offset-1 col-md-10">
+                    {{item.errors}}
+                </div>
+            </div>
+        {% endfor %}
+        <div class="form-group">
+            <br />
+            <div class="col-md-offset-4 col-md-10">
+               <input type="submit" class="btn btn-danger btn-sm" onclick="modify()" value="确认提交">
+            <div>
+        </div>
+    </form>
+</div>
+
+<script>
+//$.ajaxSetup({
+//  data: {csrfmiddlewaretoken: '{{ csrf_token }}' },
+//});
+
+function getCookie(name) {
+    var cookieValue = null;
+    if (document.cookie && document.cookie != '') {
+        var cookies = document.cookie.split(';');
+        for (var i = 0; i < cookies.length; i++) {
+            var cookie = jQuery.trim(cookies[i]);
+
+            if (cookie.substring(0, name.length + 1) == (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+
+var csrftoken = getCookie('csrftoken');
+function csrfSafeMethod(method) {
+    return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+}
+$.ajaxSetup({
+    beforeSend: function(xhr, settings) {
+        if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+            xhr.setRequestHeader("X-CSRFToken", csrftoken);
+        }
+    }
+});
+
+function modify(){
+    if(confirm('确认修改代理层?')){
+        var domain = $("#id_domain").val();
+        var mapping_ip = $("#id_mapping_ip").val();
+        var mark = $("#id_mark").val();
+        var url = $("myform").attr("action");
+        var data = {
+            'domain':domain,
+            'mapping_ip':mapping_ip,
+            'mark':mark,
+        };
+        $.post(url,data,function(result){
+            if(result.code==0){
+                alert('申请成功,等待管理员审批(详情请查询申请列表)!');
+            }else{
+                var reqerr = '申请失败,详情如下:' + result.reqinfo;
+                alert(reqerr);
+            }
+        });
+    };
+}
+
+
+</script>
+{% endblock %}

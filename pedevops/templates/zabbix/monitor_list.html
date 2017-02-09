@@ -1,0 +1,104 @@
+{% extends "common/base.zabbix.html" %}
+
+{% block title %}
+    monitor_hostlist
+{% endblock %}
+{% block rcontent %}
+    <div class="btn-toolbar">
+    {% url "monitor_list" as monitor_listurl %}
+    <a class="btn btn-default" href={{ monitor_listurl}}><span class="glyphicon glyphicon-list"></span>监控主机列表</a>
+    </div>
+
+    <hr/>
+
+    <div class="starter-template">
+        <td valign=top><b>选择分组:</b></td>
+        <td colspan=2>
+            <a href="/zabbix/hostlist/0/">全部</a>
+            {% for k,v in hostgroupdic.items %}
+                <span>&nbsp;|&nbsp;</span>
+                <a href="/zabbix/hostlist/{{ v }}/">{{ k }}</a>
+            {% endfor %}
+    </div>
+
+    <style>
+         .table th, .table td {
+                text-align: center;
+                height:38px;
+            }
+    </style>
+
+
+    <div class="btn-toolbar">
+        <br>
+        <div class="col-md-offset-0 col-md-10">
+            <h4>监控列表:</h4>
+        </div>
+        <table class="table table-hover table-striped  table-bordered table-condensed" style="table-layout:fixed;">
+             <tr>
+             <th width="8%">ID</th>
+             <th width="14%">名称</th>
+             <th width="10%">ip地址</th>
+             <th width="20%">所属分组</th>
+             <th>Templates</th>
+             <th width="10%">状态</th>
+             <th width="10%">Availability</th>
+             <th width="7%">操作</th>
+             </tr>
+             {% for i in IPage %}
+                 <tr style="font-size:13px;">
+                     <td>
+                        <div class="dropdown">
+                            <button type="button" class="btn dropdown-toggle" data-toggle="dropdown">{{i.hostid}} <span class="caret"></span>
+                            </button>
+                            <ul class="dropdown-menu">
+                            {% for t in i.triggers %}
+                                 {% for k,v in t.items %}
+                                     {% ifequal v "Warning" %}
+                                         <li><a class="list-group-item"><font color="#FFD306">{{ v }}</font>:        {{ k }}</a></li>
+                                     {% endifequal %}
+                                     {% ifequal v "Average"%}
+                                         <li><a class="list-group-item"><font color="#EA7500">{{ v }}</font>:        {{ k }}</a></li>
+                                     {% endifequal %}
+
+                                     {% ifequal v "High" %}
+                                         <li><a class="list-group-item"><font color="#BB3D00">{{ v }}</font>:        {{ k }}</a></li>
+                                     {% endifequal %}
+                                     {% ifequal v "Disaster" %}
+                                         <li><a class="list-group-item"><font color="#EA0000">{{ v }}</font>:        {{ k }}</a></li>
+                                     {% endifequal %}
+ 
+                                 {% endfor %}
+                            {% endfor %}
+                           </ul>
+                         </div>
+                     </td>
+                     <td>{{ i.name }}</td>
+                     <td>{{ i.interfaces }}</td>
+                     <td>{{ i.groups }}</td>
+                     <td>{{ i.parentTemplates }}</td>
+                     <td>
+                         {% ifequal i.status "0" %}
+                             <a class="label label-success" style="font-size:12px" href="./{{ i.hostid }}/?status=1" onclick="return confirm('Disable Host?')" >Enabled</span>
+                         {% else %}
+                             <a class="label label-danger" style="font-size:12px" href="./{{ i.hostid }}/?status=0" onclick="return confirm('Enable Host?')" >Disabled</span>
+                         {% endifequal %}
+                     </td>
+                     <td>
+                         {% for s in i.available %}
+                             <span class="label label-info" style="font-size:12px">{{ s }}</span>
+                         {% endfor %}
+
+                     </td>
+                     <td>
+                         <a class="label label-warning" style="font-size:12px" href="./{{ i.hostid }}/?operation=delete" onclick="return confirm('是否确认删除?')">删除主机</a>
+                    </td>
+                 </tr>
+             {% endfor %}
+
+
+        </table>
+
+    {% include "common/paginator.html" %}
+    </div>
+{% endblock %}

@@ -1,0 +1,49 @@
+{% extends "common/base.admin.html" %}
+
+{% block title %}
+    List User
+{% endblock %}
+
+{% block rcontent %}
+    <div class="btn-toolbar">
+        <div class="btn-group">
+            <a class="btn btn-default {%if request.path = thelistuserurl%} active {%endif%}" href={{ thelistuserurl }}><span class="glyphicon glyphicon-list"></span>用户列表</a>
+        </div>
+    </div>
+
+    <hr/>
+
+    <table class="table table-hover table-striped  table-bordered table-condensed">
+        <tr>
+            <th>用户ID</th>
+            <th>账号</th>
+            <th>状态</th>
+            <th>角色</th>
+            <th>最后登录时间</th>
+            <th>操作</th>
+        </tr>
+
+            {% for i in IPage %}
+                <tr style="font-size: 13px;">
+                    <td>{{ i.id }}</td>
+                    <td>{{ i.username }}</td>
+                    <td>
+                        {% if i.is_active %}
+                            <span class="label label-success">启用</span>
+                        {% else %}
+                            <span class="label label-default">禁用</span>
+                        {% endif %}
+                    </td>
+                    <td>{{i.role }}
+                    </td>
+                    <td>{{ i.lastlogintime }}</td>
+                    <td class="host_buttom">
+                        <a class="btn btn-warning btn-xs" href={% url "useredit" i.id %} onclick="return confirm('是否确认编辑?')">编辑</a>
+                        <a class="btn btn-danger btn-xs" href={% url "userdelete" i.id %} onclick="return confirm('是否确认删除?')">删除</a>
+                    </td>
+                </tr>
+            {% endfor %}
+
+        </table>
+    {% include "common/paginator.html" %}
+{% endblock %}
