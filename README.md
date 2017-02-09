@@ -12,8 +12,8 @@
      
      
 ##环境：
-     ```系统：centos 6.7
-     语言： python 2.7
-     框架： Django 1.8
-     前端： bootstrap-3.2.0
+     ```系统：centos 6.7 <br>
+     语言： python 2.7<br>
+     框架： Django 1.8<br>
+     前端： bootstrap-3.2.0<br>
      zabbix: 3.0```
