@@ -14,5 +14,4 @@
 ##环境：
      语言： python 2.7
      框架： Django 1.8
-     zabbix: 3.0
      前端： bootstrap-3.2.0
