@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+<link rel="stylesheet" type="text/css" href="./jquery.datetimepicker.css"/>
+</head>
+<body>
+	<h3>DateTimePicker</h3>
+	<input type="text" value="" id="datetimepicker"/>
+	<h3>Mask DateTimePicker</h3>
+	<input type="text" value="" id="datetimepicker_mask"/>
+</body>
+
+
+<script src="./jquery.js"></script>
+<script src="./jquery.datetimepicker.js"></script>
+<script>
+//$('#datetimepicker').datetimepicker();
+$('#datetimepicker').datetimepicker({lang:'ch'});
+$('#datetimepicker').datetimepicker({value:'2015-04-15 05:03',step:10});
+
+//$('#datetimepicker_mask').datetimepicker();
+$('#datetimepicker_mask').datetimepicker({lang:'ch'});
+$('#datetimepicker_mask').datetimepicker({value:'2015-04-15 05:03',step:10});
+
+
+</script>
+</html>
